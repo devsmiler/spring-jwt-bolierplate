@@ -1,12 +1,15 @@
 package com.jwt.study.dto.response;
 
 import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
-public class SignIn {
+@Getter @Setter
+public class TokenResponse {
     private String token;
 
     @Builder
-    public SignIn(String token) {
+    public TokenResponse(String token) {
         this.token = token;
     }
 }

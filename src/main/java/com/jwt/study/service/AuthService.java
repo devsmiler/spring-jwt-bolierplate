@@ -13,21 +13,22 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service @Slf4j
-public class MemberService {
+public class AuthService {
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public Member getMemberId(String userId) {
-        return memberRepository.findById(Long.valueOf(userId)).orElseThrow(RuntimeException::new);
+    public TokenResponse signIn(SignIn signIn) {
+        return getTokenResponse(signIn, memberRepository, jwtTokenProvider);
     }
 
-    public TokenResponse signIn(SignIn signIn) {
+    static TokenResponse getTokenResponse(SignIn signIn, MemberRepository memberRepository, JwtTokenProvider jwtTokenProvider) {
         Member member = memberRepository.findByEmail(signIn.getEmail()).orElseThrow(RuntimeException::new);
         if (member.getPassword().equals(signIn.getPassword())){
             return TokenResponse.builder().token(jwtTokenProvider.createToken(String.valueOf(member.getId()), member.getRoles())).build();
         }
         return TokenResponse.builder().token("토큰 인증 실패했어율 에러 처리는 나중에하겠수다..").build();
     }
+
     @Transactional
     public String signUp(SignUp signUp) {
         log.info(signUp.toString());
