@@ -3,6 +3,7 @@ package com.jwt.study.domain;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,16 +14,25 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Entity @AllArgsConstructor @Data
+@Entity
+@AllArgsConstructor @Getter
 @Slf4j
-public class Member {
-    @GeneratedValue @Id
-    Long id;
-    String email;
-    String password;
+public class Member extends BaseTimeEntity {
+    @GeneratedValue
+    @Column(name = "member_id")
+    @Id
+    private Long id;
+    private String email;
+    private String password;
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<Board> boards = new ArrayList<>();
+    @OneToMany(mappedBy = "member")
+    private List<Comment> comments = new ArrayList<>();
+
     public Member() {
 
     }
@@ -36,8 +46,6 @@ public class Member {
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> collect = this.roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
-        log.info("Collect :" + collect.toString());
-        log.info("my roles :" + this.roles.toString());
         return  collect;
     }
 }

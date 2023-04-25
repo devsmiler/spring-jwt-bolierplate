@@ -8,10 +8,9 @@ import java.util.Optional;
 
 public class SecurityUtil {
 
-    private SecurityUtil() {
-    }
+    private SecurityUtil() {}
 /**
- * created by Edgar Kim
+ *  created by Edgar Kim
      인증 API를 제외하고는 loadUserByUsername를 호출하지 않기에 별도로 Account를 디비에서 조회해주어야 한다.
      security context의 Authentication 객체를 이용해 username을 리턴해준다.
      security context에 authentication 객체가 저장되는 시점은 JwtFilter의 doFilter 영역
