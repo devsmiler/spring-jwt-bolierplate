@@ -2,6 +2,7 @@ package com.jwt.study.controller;
 
 import com.jwt.study.dto.request.CreateBoard;
 import com.jwt.study.dto.request.CreateComment;
+import com.jwt.study.service.BoardFacade;
 import com.jwt.study.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class BoardController {
     private final BoardService boardService;
+    private final BoardFacade boardFacade;
     @PreAuthorize("hasAnyAuthority('GUEST')")
     @PostMapping("/board")
     public Long createBoard(
@@ -27,6 +29,7 @@ public class BoardController {
                 createBoard,
                 authentication);
     }
+
     @PreAuthorize("hasAnyAuthority('GUEST')")
     @PostMapping("/board/{boardId}")
     public Long createComment(
@@ -34,7 +37,7 @@ public class BoardController {
             @RequestBody CreateComment createComment,
             Authentication authentication
     ) {
-        return boardService.createComment(
+        return boardFacade.createComment(
                 boardId,
                 createComment,
                 authentication);

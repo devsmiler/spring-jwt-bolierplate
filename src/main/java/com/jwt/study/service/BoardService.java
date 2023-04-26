@@ -20,7 +20,6 @@ import java.util.Optional;
 public class BoardService {
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
-    private final CommentRepository commentRepository;
     @Transactional
     public Long createBoard(CreateBoard createBoard, Authentication authentication){
         log.info("auth get name :"+ (Member) authentication.getPrincipal());
@@ -36,28 +35,10 @@ public class BoardService {
     public void getBoards(){
 
     }
-    public void getOneBoard(){
-
+    public Board getBoardById(Long boardId){
+        return boardRepository.findById(boardId).orElseThrow(RuntimeException::new);
     }
     public void updateBoard(){
 
-    }
-
-    public Long createComment(
-            Long boardId,
-            CreateComment createComment,
-            Authentication authentication ) {
-        Member m = (Member) authentication.getPrincipal();
-        Member member = memberRepository.findById(m.getId()).orElseThrow(RuntimeException::new);
-
-        Board board = boardRepository.findById(boardId).orElseThrow(RuntimeException::new);
-
-        createComment.setWriter(member.getEmail());
-        Comment comment = createComment.toEntity();
-        comment.setMember(member);
-        comment.setBoard(board);
-
-        Comment save = commentRepository.save(comment);
-        return save.getId();
     }
 }

@@ -8,6 +8,7 @@ import com.jwt.study.dto.response.TokenResponse;
 import com.jwt.study.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,5 +20,10 @@ public class MemberDetailService {
     public Member getMemberId(String userId) {
         return memberRepository.findById(Long.valueOf(userId)).orElseThrow(RuntimeException::new);
     }
+    public Member getMemberIdFromAuth(Authentication authentication) {
+        Member m = (Member) authentication.getPrincipal();
+        return memberRepository.findById(m.getId()).orElseThrow(RuntimeException::new);
+    }
+
 
 }
