@@ -1,6 +1,7 @@
 package com.jwt.study.dto.request;
 
 import com.jwt.study.domain.Comment;
+import com.jwt.study.domain.CommentStatus;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +17,7 @@ public class CreateComment {
         return Comment.builder()
                 .contents(contents)
                 .writer(writer)
+                .commentStatus(CommentStatus.active)
                 .build();
     }
 }

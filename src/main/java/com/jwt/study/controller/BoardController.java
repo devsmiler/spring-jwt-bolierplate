@@ -2,32 +2,66 @@ package com.jwt.study.controller;
 
 import com.jwt.study.dto.request.CreateBoard;
 import com.jwt.study.dto.request.CreateComment;
+import com.jwt.study.dto.request.UpdateBoardDto;
+import com.jwt.study.dto.request.UpdateComment;
+import com.jwt.study.dto.response.BoardResponse;
 import com.jwt.study.service.BoardFacade;
 import com.jwt.study.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @Slf4j
 @RequiredArgsConstructor
 public class BoardController {
-    private final BoardService boardService;
     private final BoardFacade boardFacade;
+    private final BoardService boardService;
     @PreAuthorize("hasAnyAuthority('GUEST')")
     @PostMapping("/board")
     public Long createBoard(
             @RequestBody CreateBoard createBoard,
             Authentication authentication
-            ) {
-        return boardService.createBoard(
-                createBoard,
-                authentication);
+    ) {
+        return boardFacade.createBoard(
+                authentication,
+                createBoard
+        );
+    }
+    @PreAuthorize("hasAnyAuthority('GUEST')")
+    @PutMapping("/board/{boardId}")
+    public void updateBoard(
+            @PathVariable Long boardId,
+            @RequestBody UpdateBoardDto updateBoardDto,
+            Authentication authentication
+    ) {
+        boardFacade.updateBoard (
+                boardId,
+                authentication,
+                updateBoardDto
+        );
+    }
+    @PreAuthorize("hasAnyAuthority('GUEST')")
+    @DeleteMapping("/board/{boardId}")
+    public void deleteBoard(
+            @PathVariable Long boardId,
+            Authentication authentication
+    ) {
+        boardFacade.deleteBoard(
+                boardId,
+                authentication
+        );
+    }
+    @PreAuthorize("hasAnyAuthority('GUEST')")
+    @GetMapping("/board")
+    public List<BoardResponse> getBoards(
+            Authentication authentication
+    ) {
+        return boardService.getBoards();
     }
 
     @PreAuthorize("hasAnyAuthority('GUEST')")
@@ -37,9 +71,39 @@ public class BoardController {
             @RequestBody CreateComment createComment,
             Authentication authentication
     ) {
-        return boardFacade.createComment(
+        return boardFacade.createComment (
                 boardId,
                 createComment,
-                authentication);
+                authentication
+        );
+    }
+    @PreAuthorize("hasAnyAuthority('GUEST')")
+    @DeleteMapping("/board/{boardId}/comment/{commentId}")
+    public void deleteComment(
+            @PathVariable Long boardId,
+            @PathVariable Long commentId,
+            Authentication authentication
+    ) {
+        boardFacade.deleteComment (
+                boardId,
+                commentId,
+                authentication
+        );
+    }
+
+    @PreAuthorize("hasAnyAuthority('GUEST')")
+    @PutMapping("/board/{boardId}/comment/{commentId}")
+    public void updateComment(
+            @PathVariable Long boardId,
+            @PathVariable Long commentId,
+            @RequestBody UpdateComment updateComment,
+            Authentication authentication
+    ) {
+        boardFacade.updateComment (
+                boardId,
+                commentId,
+                updateComment,
+                authentication
+        );
     }
 }

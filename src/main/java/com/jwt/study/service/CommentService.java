@@ -4,13 +4,14 @@ import com.jwt.study.domain.Board;
 import com.jwt.study.domain.Comment;
 import com.jwt.study.domain.Member;
 import com.jwt.study.dto.request.CreateComment;
+import com.jwt.study.dto.request.UpdateComment;
 import com.jwt.study.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor @Slf4j
 public class CommentService {
     private final CommentRepository commentRepository;
     public Long create (
@@ -23,5 +24,24 @@ public class CommentService {
 
         Comment save = commentRepository.save(comment);
         return save.getId();
+    }
+    public Comment getCommentById(Long commentId) {
+        return commentRepository.findById(commentId).orElseThrow(RuntimeException::new);
+    }
+    public void delete(Long commentId, Member member) {
+        Comment comment = getCommentById(commentId);
+        if (comment.getMember().equals(member)) {
+            comment.delete();
+        } else {
+            log.info("unauthorized"); // 예외 처리 필수
+        }
+    }
+    public void update(Long commentId, Member member, UpdateComment updateComment) {
+        Comment comment = getCommentById(commentId);
+        if (comment.getMember().equals(member)) {
+            comment.edit(updateComment);
+        } else {
+            log.info("unauthorized"); // 예외 처리 필수
+        }
     }
 }

@@ -22,7 +22,7 @@ public class AuthService {
     }
 
     static TokenResponse getTokenResponse(SignIn signIn, MemberRepository memberRepository, JwtTokenProvider jwtTokenProvider) {
-        Member member = memberRepository.findByEmail(signIn.getEmail()).orElseThrow(RuntimeException::new);
+        Member member = memberRepository.findByEmail(signIn.getEmail()).orElseThrow(RuntimeException::new); // 에러 핸들링 필요
         if (member.getPassword().equals(signIn.getPassword())){
             return TokenResponse.builder().token(jwtTokenProvider.createToken(String.valueOf(member.getId()), member.getRoles())).build();
         }

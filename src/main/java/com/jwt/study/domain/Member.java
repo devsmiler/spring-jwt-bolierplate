@@ -25,7 +25,6 @@ public class Member extends BaseTimeEntity {
     private String email;
     private String password;
     @ElementCollection(fetch = FetchType.EAGER)
-    @Builder.Default
     private List<String> roles = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")

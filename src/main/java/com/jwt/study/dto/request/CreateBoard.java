@@ -1,6 +1,7 @@
 package com.jwt.study.dto.request;
 
 import com.jwt.study.domain.Board;
+import com.jwt.study.domain.BoardStatus;
 import com.jwt.study.domain.Member;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,8 @@ public class CreateBoard {
         return Board.builder()
                 .contents(contents)
                 .writer(writer)
+                .commentCount(0)
+                .boardStatus(BoardStatus.active)
                 .build();
     }
 }
