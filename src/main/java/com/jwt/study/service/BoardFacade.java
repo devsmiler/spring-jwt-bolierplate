@@ -2,15 +2,22 @@ package com.jwt.study.service;
 
 import com.jwt.study.annotation.Facade;
 import com.jwt.study.domain.Board;
+import com.jwt.study.domain.Comment;
 import com.jwt.study.domain.Member;
 import com.jwt.study.dto.request.CreateBoard;
 import com.jwt.study.dto.request.CreateComment;
-import com.jwt.study.dto.request.UpdateBoardDto;
+import com.jwt.study.dto.request.UpdateBoard;
 import com.jwt.study.dto.request.UpdateComment;
+import com.jwt.study.dto.response.BoardComment;
+import com.jwt.study.dto.response.BoardResponse;
+import com.jwt.study.dto.response.CommentResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Facade
 @RequiredArgsConstructor @Slf4j
@@ -27,14 +34,30 @@ public class BoardFacade {
         Member member = memberDetailService.getMemberIdFromAuth(authentication);
         return boardService.createBoard(createBoard, member);
     }
+    @Transactional(readOnly = true)
+    public BoardComment getBoardOne (
+            Long boardId,
+            Authentication authentication
+    ) {
+        Member member = memberDetailService.getMemberIdFromAuth(authentication);
+        Board board = boardService.getBoardById(boardId);
+        List<Comment> comments = commentService.getCommentsBoardById(board);
+        return new BoardComment(
+                new BoardResponse(board),
+                comments.stream()
+                        .map(CommentResponse::new)
+                        .collect(Collectors.toList())
+                );
+    }
+
     @Transactional
     public void updateBoard (
             Long boardId,
             Authentication authentication,
-            UpdateBoardDto updateBoardDto
+            UpdateBoard updateBoard
     ) {
         Member member = memberDetailService.getMemberIdFromAuth(authentication);
-        boardService.updateBoard(boardId, member, updateBoardDto);
+        boardService.updateBoard(boardId, member, updateBoard);
     }
 
     public void deleteBoard(Long boardId,

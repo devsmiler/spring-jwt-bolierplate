@@ -5,10 +5,13 @@ import com.jwt.study.domain.Comment;
 import com.jwt.study.domain.Member;
 import com.jwt.study.dto.request.CreateComment;
 import com.jwt.study.dto.request.UpdateComment;
+import com.jwt.study.dto.response.CommentResponse;
 import com.jwt.study.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor @Slf4j
@@ -27,6 +30,9 @@ public class CommentService {
     }
     public Comment getCommentById(Long commentId) {
         return commentRepository.findById(commentId).orElseThrow(RuntimeException::new);
+    }
+    public List<Comment> getCommentsBoardById(Board board) {
+        return commentRepository.getCommentsByBoardId(board);
     }
     public void delete(Long commentId, Member member) {
         Comment comment = getCommentById(commentId);

@@ -1,6 +1,6 @@
 package com.jwt.study.domain;
 
-import com.jwt.study.dto.request.UpdateBoardDto;
+import com.jwt.study.dto.request.UpdateBoard;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,13 +30,12 @@ public class Board extends BaseTimeEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public void edit(UpdateBoardDto updateBoardDto) {
+    public void edit(UpdateBoard updateBoard) {
 
-        if (updateBoardDto.getContents() != null){
-            contents = updateBoardDto.getContents();
+        if (updateBoard.getContents() != null){
+            contents = updateBoard.getContents();
         }
     }
-
     public void setMember(Member member){
         this.member = member;
         member.getBoards().add(this);
@@ -49,7 +48,6 @@ public class Board extends BaseTimeEntity {
             commentCount -=1 ;
         }
     }
-
     public void delete() {
         boardStatus = BoardStatus.deleted;
     }

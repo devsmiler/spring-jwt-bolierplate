@@ -1,19 +1,18 @@
 package com.jwt.study.dto.request;
 
 import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.ToString;
 
 @Data @ToString(of = {"contents"})
-public class UpdateBoardDto {
+public class UpdateBoard {
     @NotNull
     private String contents;
 
-    public UpdateBoardDto() {
+    public UpdateBoard() {
     }
 
-    public UpdateBoardDto(String contents) {
+    public UpdateBoard(String contents) {
         this.contents = contents;
     }
 }

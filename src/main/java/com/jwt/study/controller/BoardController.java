@@ -2,13 +2,16 @@ package com.jwt.study.controller;
 
 import com.jwt.study.dto.request.CreateBoard;
 import com.jwt.study.dto.request.CreateComment;
-import com.jwt.study.dto.request.UpdateBoardDto;
+import com.jwt.study.dto.request.UpdateBoard;
 import com.jwt.study.dto.request.UpdateComment;
+import com.jwt.study.dto.response.BoardComment;
 import com.jwt.study.dto.response.BoardResponse;
 import com.jwt.study.service.BoardFacade;
 import com.jwt.study.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +30,7 @@ public class BoardController {
             @RequestBody CreateBoard createBoard,
             Authentication authentication
     ) {
-        return boardFacade.createBoard(
+        return boardFacade.createBoard (
                 authentication,
                 createBoard
         );
@@ -36,13 +39,13 @@ public class BoardController {
     @PutMapping("/board/{boardId}")
     public void updateBoard(
             @PathVariable Long boardId,
-            @RequestBody UpdateBoardDto updateBoardDto,
+            @RequestBody UpdateBoard updateBoard,
             Authentication authentication
     ) {
         boardFacade.updateBoard (
                 boardId,
                 authentication,
-                updateBoardDto
+                updateBoard
         );
     }
     @PreAuthorize("hasAnyAuthority('GUEST')")
@@ -51,17 +54,29 @@ public class BoardController {
             @PathVariable Long boardId,
             Authentication authentication
     ) {
-        boardFacade.deleteBoard(
+        boardFacade.deleteBoard (
                 boardId,
                 authentication
         );
     }
     @PreAuthorize("hasAnyAuthority('GUEST')")
     @GetMapping("/board")
-    public List<BoardResponse> getBoards(
+    public Page<BoardResponse> getBoards(
+            Pageable pageable,
             Authentication authentication
     ) {
-        return boardService.getBoards();
+        return boardService.getBoards(pageable);
+    }
+    @PreAuthorize("hasAnyAuthority('GUEST')")
+    @GetMapping("/board/{boardId}")
+    public BoardComment getBoardOne(
+            @PathVariable Long boardId,
+            Authentication authentication
+    ) {
+        return boardFacade.getBoardOne (
+                boardId,
+                authentication
+        );
     }
 
     @PreAuthorize("hasAnyAuthority('GUEST')")

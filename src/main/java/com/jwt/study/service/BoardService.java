@@ -4,10 +4,12 @@ import com.jwt.study.domain.Board;
 import com.jwt.study.domain.Member;
 import com.jwt.study.dto.request.CreateBoard;
 import com.jwt.study.dto.response.BoardResponse;
-import com.jwt.study.dto.request.UpdateBoardDto;
+import com.jwt.study.dto.request.UpdateBoard;
 import com.jwt.study.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,11 +28,12 @@ public class BoardService {
         Board save = boardRepository.save(board);
         return save.getId();
     }
-    public List<BoardResponse> getBoards(){
-            return boardRepository.getList()
-                    .stream()
-                    .map(BoardResponse::new)
-                    .collect(Collectors.toList());
+    public Page<BoardResponse> getBoards(Pageable pageable){
+        return boardRepository.getList(pageable);
+    }
+    public BoardResponse getBoardOne(Long boardId){
+        Board board = getBoardById(boardId);
+        return new BoardResponse(board);
     }
     public Board getBoardById(Long boardId){
         return boardRepository.findById(boardId).orElseThrow(RuntimeException::new);
@@ -42,18 +45,17 @@ public class BoardService {
         return board;
     }
     @Transactional
-    public Board minusCommentCount(Long boardId) {
+    public void minusCommentCount(Long boardId) {
         Board board = this.getBoardById(boardId);
         board.minusCommentCount();
-        return board;
     }
     @Transactional
-    public void updateBoard(Long boardId, Member member, UpdateBoardDto updateBoardDto){
+    public void updateBoard(Long boardId, Member member, UpdateBoard updateBoard){
         Board board = this.getBoardById(boardId);
         if (board.getMember().equals(member)){
-            log.info(updateBoardDto.toString());
+            log.info(updateBoard.toString());
             log.info("im users");
-            board.edit(updateBoardDto);
+            board.edit(updateBoard);
         } else {
             log.info("unauthorized"); // 예외 처리 필수
         }

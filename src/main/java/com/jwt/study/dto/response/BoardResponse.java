@@ -1,7 +1,7 @@
 package com.jwt.study.dto.response;
 
 import com.jwt.study.domain.Board;
-import com.sun.istack.NotNull;
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,11 +20,12 @@ public class BoardResponse {
         this.writer = writer;
         this.contents = contents;
     }
-
+    @QueryProjection
     public BoardResponse(Board board) {
         this.id = board.getId();
         this.writer = board.getWriter();
         this.contents = board.getContents();
+        this.commentCount = board.getCommentCount();
     }
 
 }
