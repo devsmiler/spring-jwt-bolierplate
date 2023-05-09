@@ -30,7 +30,8 @@ public class Board extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-
+    @ManyToMany(mappedBy = "boards")
+    private List<Category> categories = new ArrayList<>();
     public void edit(UpdateBoard updateBoard) {
         if (updateBoard.getContents() != null){
             contents = updateBoard.getContents();

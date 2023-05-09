@@ -15,17 +15,27 @@ import java.util.List;
 public class CategoryController {
     private final CategoryService categoryService;
     @PostMapping("")
-    public void addCategory(@RequestBody CreateCategory createCategory) {
+    public void addCategory (
+        @RequestBody CreateCategory createCategory
+    ) {
         categoryService.addCategory(createCategory);
     }
 
     @GetMapping("")
-    public List<CategoryResponse> findAll(@RequestParam(required = false) Long parentId) {
+    public List<CategoryResponse> findAll (
+        @RequestParam(required = false) Long parentId
+    ) {
         return categoryService.findAll(parentId);
     }
     @DeleteMapping("/{categoryId}")
-    public void delete(
-            @PathVariable Long categoryId
+    public void delete (
+        @PathVariable Long categoryId
+    ) {
+
+    }
+    @PutMapping("/{categoryId}")
+    public void update (
+        @PathVariable Long categoryId
     ) {
 
     }
