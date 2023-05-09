@@ -17,6 +17,7 @@ public class Board extends BaseTimeEntity {
     @Id @Column(name = "board_id")
     @GeneratedValue
     private Long id;
+    private String topic;
     private String contents;
     private String writer;
     @Column(nullable = false)
@@ -31,7 +32,6 @@ public class Board extends BaseTimeEntity {
     private Member member;
 
     public void edit(UpdateBoard updateBoard) {
-
         if (updateBoard.getContents() != null){
             contents = updateBoard.getContents();
         }

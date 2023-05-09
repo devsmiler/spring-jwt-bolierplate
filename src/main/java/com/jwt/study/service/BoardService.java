@@ -53,8 +53,6 @@ public class BoardService {
     public void updateBoard(Long boardId, Member member, UpdateBoard updateBoard){
         Board board = this.getBoardById(boardId);
         if (board.getMember().equals(member)){
-            log.info(updateBoard.toString());
-            log.info("im users");
             board.edit(updateBoard);
         } else {
             log.info("unauthorized"); // 예외 처리 필수
@@ -64,7 +62,6 @@ public class BoardService {
     public void deleteBoard(Long boardId, Member member){
         Board board = this.getBoardById(boardId);
         if (board.getMember().equals(member)){
-            log.info("im users");
             board.delete();
         } else {
             log.info("unauthorized"); // 예외 처리 필수
