@@ -8,6 +8,7 @@ import com.jwt.study.dto.request.UpdateBoard;
 import com.jwt.study.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,21 @@ import java.util.stream.Collectors;
 public class BoardService {
     private final BoardRepository boardRepository;
 
+    /*
+    @Cacheable(cacheNames = ..., key = ...)
+    : 해당 메소드의 리턴값을 캐시에 저장. 메소드가 호출될 때마다 캐시 저장소에
+    저장된 캐시가 있는지 확인하고 있다면 메소드를 실행하지 않고 캐시를 반환.
+    cacheNames - 캐시 이름
+    key - 캐시에 접근하기 위한 키 값
+    * Redis에 실제로 저장될 때는 "cacheNames::key" 형식으로 저장된다.
+
+    @CacheEvict(cacheNames = ..., key = ..., allEntries = ...)
+    : 지정된 키에 해당하는 캐시를 삭제
+    allEntries - true일 경우, 같은 이름을 가진 모든 캐시를 삭제
+
+    @Caching(evict = ..., put = ...)
+    : 여러 캐싱 작업을 한 번에 적용시키기 위한 어노테이션
+     */
     @Transactional
     public Long createBoard(CreateBoard createBoard, Member member){
         createBoard.setWriter(member.getEmail());
@@ -28,6 +44,7 @@ public class BoardService {
         Board save = boardRepository.save(board);
         return save.getId();
     }
+    @Cacheable(key = "#pageable", value = "getBoards")
     public Page<BoardResponse> getBoards(Pageable pageable){
         return boardRepository.getList(pageable);
     }

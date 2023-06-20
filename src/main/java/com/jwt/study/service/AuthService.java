@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
-
     public TokenResponse signIn(SignIn signIn) {
         return getTokenResponse(signIn, memberRepository, jwtTokenProvider);
     }
@@ -28,6 +27,7 @@ public class AuthService {
         }
         return TokenResponse.builder().token("토큰 인증 실패했어율 에러 처리는 나중에하겠수다..").build();
     }
+
 
     @Transactional
     public String signUp(SignUp signUp) {

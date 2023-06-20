@@ -2,12 +2,11 @@ package com.jwt.study.dto.response;
 
 import com.jwt.study.domain.Board;
 import com.querydsl.core.annotations.QueryProjection;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@AllArgsConstructor @NoArgsConstructor
 public class BoardResponse {
     private Long id;
     private String writer;
